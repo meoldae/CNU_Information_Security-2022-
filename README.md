@@ -1,2 +1,2 @@
-# CNU_Information_Security-2022-
+# CNU_Information_Security-2022
 2022-2 정보보호 과목 Repo.
