@@ -75,6 +75,12 @@ def pass_plugboard(input):
         elif str.endswith(plug, input):
             return plug[0]
     return input
+    '''
+    input이 Plugboard에 있으면 
+        플러그로 연결된 글자끼리 교환하여 출력 
+    input이 Plugboard에 없으면?
+        그대로 출력
+    '''
 
 # ETW
 def pass_etw(input):
@@ -84,6 +90,23 @@ def pass_etw(input):
 def pass_wheels(input, reverse = False):
     # Implement Wheel Logics
     # Keep in mind that reflected signals pass wheels in reverse order
+
+    if not reverse: # SEND ( Right >> Middle >> Left )
+        for i in range(len(SETTINGS["WHEELS"])-1, -1, -1): 
+            ring = SETTINGS["WHEELS"][i]
+            connectedIndex = ring["wire"].index(input) 
+            input = ring['wire'][(connectedIndex + ring["turn"]) % 26]
+    
+    else:   # RECEIVE ( Left >> Middle >> Right )
+        for i in range(len(SETTINGS["WHEELS"])): 
+            ring = SETTINGS["WHEELS"][i]
+            connectedIndex = ring["wire"].index(input) 
+            input = ring['wire'][(connectedIndex + ring["turn"]) % 26]
+
+    # Input Character to Right Wheel > Middle Wheel > Left Wheel
+    # Wheel간의 Connect는 입력된 문자의 index에 Wheel의 turn을 더하고, 
+    # 휠에서 해당 인덱스번째의 문자를 전달하였습니다.
+    
     return input
 
 # UKW
@@ -93,6 +116,17 @@ def pass_ukw(input):
 # Wheel Rotation
 def rotate_wheels():
     # Implement Wheel Rotation Logics
+    
+    # Right Wheel turn 1 click
+    SETTINGS["WHEELS"][2]['turn'] = (SETTINGS["WHEELS"][2]['turn']+1) % 26
+    # If Right Wheel turn 1 round, 
+    if not SETTINGS["WHEELS"][2]['turn']:
+        # Middle Wheel turn 1 click
+        SETTINGS["WHEELS"][1]['turn'] = (SETTINGS["WHEELS"][1]['turn']+1) % 26
+        # If Middle Wheel turn 1 round,
+        if not SETTINGS["WHEELS"][1]['turn']:
+            # Left Wheel turn 1 click
+            SETTINGS["WHEELS"][0]['turn'] = (SETTINGS["WHEELS"][0]['turn']+1) % 26
 
     pass
 
@@ -111,8 +145,10 @@ for ch in plaintext:
     encoded_ch = ch
 
     encoded_ch = pass_plugboard(encoded_ch)
+    # ETW : Entry Disc
     encoded_ch = pass_etw(encoded_ch)
     encoded_ch = pass_wheels(encoded_ch)
+    # UKW : Reflector
     encoded_ch = pass_ukw(encoded_ch)
     encoded_ch = pass_wheels(encoded_ch, reverse = True)
     encoded_ch = pass_plugboard(encoded_ch)
@@ -121,9 +157,9 @@ for ch in plaintext:
     
 '''
 input for copy&paste
-JUNYOUNG
+JEONJUNYOUNG
 A
 I II III
-A B C
-HA PB NC ED XE WF YG FH TI MJ OK BL KM QN CO DP AQ UR IS VT LU SV GW JX ZY RZ
+J J Y
+HA PB NC ED OS
 '''
