@@ -15,15 +15,15 @@ ETW = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 WHEELS = {
     "I" : {
         "wire": "EKMFLGDQVZNTOWYHXUSPAIBRCJ",
-        "turn": 16
+        "turn": 16,
     },
     "II": {
         "wire": "AJDKSIRUXBLHWTMCQGZNPYFVOE",
-        "turn": 4
+        "turn": 4,
     },
     "III": {
         "wire": "BDFHJLCPRTXVZNYEIWGAKMUSQO",
-        "turn": 21
+        "turn": 21,
     }
 }
 
@@ -75,12 +75,8 @@ def pass_plugboard(input):
         elif str.endswith(plug, input):
             return plug[0]
     return input
-    '''
-    input이 Plugboard에 있으면 
-        플러그로 연결된 글자끼리 교환하여 출력 
-    input이 Plugboard에 없으면
-        그대로 출력
-    '''
+    
+    # input in  Plugboard => Change character with connected By plug 
 
 # ETW
 def pass_etw(input):
@@ -90,20 +86,22 @@ def pass_etw(input):
 def pass_wheels(input, reverse = False):
     # Implement Wheel Logics
     # Keep in mind that reflected signals pass wheels in reverse order
-
-    if not reverse: # Right > Middle > Left 
-        shift = ord(input) - ord('A')
-        idx = (SETTINGS['WHEEL_POS'][2] - ord('A')) % 26
-        idx = (idx+shift) % 26 
-        
     
+    if not reverse: # Right > Middle > Left
+        for i in range(2, -1, -1):
+            input = SETTINGS["WHEELS"][i]["wire"][(ord(input)-ord('A')+SETTINGS["WHEEL_POS"][i])%26]
+
+    else:   # Left > Middle > Right
+        for i in range(3):
+            input = chr((SETTINGS["WHEELS"][i]["wire"].index(input)-SETTINGS["WHEEL_POS"][i])%26+ ord('A'))
+            
     return input
 
 # UKW
 def pass_ukw(input):
     return SETTINGS["UKW"][ord(input) - ord('A')]
 
-# Wheel Rotation
+## Wheel Rotation
 def rotate_wheels():    
     # Right Wheel turn 1 click
     SETTINGS['WHEEL_POS'][2] = (SETTINGS['WHEEL_POS'][2]+1) % 26
@@ -115,7 +113,6 @@ def rotate_wheels():
         if not SETTINGS['WHEEL_POS'][1] == SETTINGS['WHEELS'][1]['turn']:
             # Left Wheel turn 1 click
             SETTINGS['WHEEL_POS'][0] = (SETTINGS['WHEEL_POS'][0]+1) % 26
-
     pass
 
 # Enigma Exec Start
@@ -123,20 +120,21 @@ plaintext = input("Plaintext to Encode: ")
 ukw_select = input("Set Reflector (A, B, C): ")
 wheel_select = input("Set Wheel Sequence L->R (I, II, III) ")
 wheel_pos_select = input("Set Wheel Position L->R (A~Z): ")
-# WHEEL POS -> WHEEL initial State == Key
+# WHEEL POS -> WHEEL initial State
 plugboard_setup = input("Plugboard Setup: ")
 
 apply_settings(ukw_select, wheel_select, wheel_pos_select, plugboard_setup)
 
 for ch in plaintext:
     rotate_wheels()
-
+    
     encoded_ch = ch
 
     encoded_ch = pass_plugboard(encoded_ch)
     # ETW : Static Wheel
     encoded_ch = pass_etw(encoded_ch)
     encoded_ch = pass_wheels(encoded_ch)
+
     # UKW : Reflector
     encoded_ch = pass_ukw(encoded_ch)
     encoded_ch = pass_wheels(encoded_ch, reverse = True)
@@ -146,6 +144,7 @@ for ch in plaintext:
 
 '''
 input for copy&paste
+
 JEONJUNYOUNG
 A
 I II III
@@ -158,4 +157,9 @@ A
 I II III
 J J Y
 AZ KP DN
+'''
+
+'''
+참고 
+https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=aepkoreanet&logNo=221680301549
 '''
