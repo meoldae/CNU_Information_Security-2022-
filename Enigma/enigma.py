@@ -15,15 +15,15 @@ ETW = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 WHEELS = {
     "I" : {
         "wire": "EKMFLGDQVZNTOWYHXUSPAIBRCJ",
-        "turn": 16,
+        "turn": 16
     },
     "II": {
         "wire": "AJDKSIRUXBLHWTMCQGZNPYFVOE",
-        "turn": 4,
+        "turn": 4
     },
     "III": {
         "wire": "BDFHJLCPRTXVZNYEIWGAKMUSQO",
-        "turn": 21,
+        "turn": 21
     }
 }
 
@@ -75,7 +75,6 @@ def pass_plugboard(input):
         elif str.endswith(plug, input):
             return plug[0]
     return input
-    
     # input in  Plugboard => Change character with connected By plug 
 
 # ETW
@@ -87,11 +86,13 @@ def pass_wheels(input, reverse = False):
     # Implement Wheel Logics
     # Keep in mind that reflected signals pass wheels in reverse order
     
-    if not reverse: # Right > Middle > Left
+    # Reflector에 도달하기 전 Right >> Middle >> Left
+    if not reverse: 
         for i in range(2, -1, -1):
             input = SETTINGS["WHEELS"][i]["wire"][(ord(input)-ord('A')+SETTINGS["WHEEL_POS"][i])%26]
 
-    else:   # Left > Middle > Right
+    # Reflector도달 이후 Left >> Middle >> Right
+    else:   
         for i in range(3):
             input = chr((SETTINGS["WHEELS"][i]["wire"].index(input)-SETTINGS["WHEEL_POS"][i])%26+ ord('A'))
             
@@ -101,8 +102,11 @@ def pass_wheels(input, reverse = False):
 def pass_ukw(input):
     return SETTINGS["UKW"][ord(input) - ord('A')]
 
-## Wheel Rotation
+# Wheel Rotation
 def rotate_wheels():    
+    # ( WHEEL_POS = 현재 위치, WHEELS['turn'] = Notch )
+    # 휠 현재 위치를 한바퀴씩 업데이트 하면서 노치에 닿을 경우, 다음 휠로 동력 전달
+    
     # Right Wheel turn 1 click
     SETTINGS['WHEEL_POS'][2] = (SETTINGS['WHEEL_POS'][2]+1) % 26
     # If Right Wheel arrive at notch, 
@@ -144,7 +148,6 @@ for ch in plaintext:
 
 '''
 input for copy&paste
-
 JEONJUNYOUNG
 A
 I II III
@@ -155,6 +158,13 @@ HA PB NC ED OS
 AAAAA
 A
 I II III
+J J Y
+AZ KP DN
+'''
+'''
+INFORMATIONSECURITYJEONJUNYOUNG
+A
+II I III
 J J Y
 AZ KP DN
 '''
