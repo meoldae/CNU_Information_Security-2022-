@@ -117,36 +117,49 @@ mode determines that this function do encryption or decryption.
 MODE_ENCRYPT or MODE_DECRYPT available.
 '''
 def sdes(text: bitarray, key: bitarray, mode) -> bitarray:
-    permutedText = []
+    permutedText = bitarray()
         
     # IP 대로 입력을 섞는다.
     for idx in IP:
         permutedText.append(text[idx])
     
     # 입력을 left, right로 나눈다.    
-    permutedTextLeft = permutedText[:4]
-    permutedTextRight = permutedText[4:]
+    permutedTextLeft = permutedText[0:4]
+    permutedTextRight = permutedText[4:8]
     
+    # Key를 생성한다.
+    key = schedule_keys(key)
+    
+    # Encryption     
     if mode == 1:
-        # 입력받은 키를 통해 라운드 키를 생성한다.
-        key = schedule_keys(key)
-        # 라운드 키와 나눈 입력을 라운드 함수에 통과 시킨다. 
-        # 라운드 함수를 통과 하면서 확장된다.
-        permutedTextRight = round(permutedTextRight, key)
+        # Right을 1 Round Key를 넣어 F에 통과시킨 후,
+        afterRound1 = round(permutedTextRight, key[0])
+        # Left 와 XOR 연산을 취한다.
+        afterRound1 ^= permutedTextLeft
         
-        permutedTextRightRow = [permutedTextRight[0], permutedTextRight[-1]]
-        permutedTextRightCol = [permutedTextRight[1], permutedTextRight[2]]
+        # Right 와 F를 통과한 Right에 Left을 XOR 한 값을 합쳐서 다음 라운드 진행
+        # Switch된 Right 에 2 Round Key를 통과시키고, 
+        afterRound2 = round(afterRound1, key[1])
+        # Switch된 Left 와 XOR 연산을 취한다.
+        afterRound2 ^= permutedTextRight
         
+        afterRound = afterRound2 + afterRound1
         
+    # Decryption : Encryption과 Key 넣는 순서만 반대로 바꾼다.
+    else:
+        afterRound1 = round(permutedTextRight, key[1])
+        afterRound1 ^= permutedTextLeft
         
-        return
-    
-    elif mode == 2:
-
+        afterRound2 = round(afterRound1, key[0])
+        afterRound2 ^= permutedTextRight
+        
+        afterRound = afterRound2 + afterRound1
             
-        return
-    # Place your own implementation of S-DES Here
-    
+    result = bitarray()
+    # 마지막 결과를 Inverse IP 대로 재배치하여 반환한다.
+    for idx in IP_1:
+        result.append(afterRound[idx])        
+        
     return result
 
 #### DES Sample Program Start
@@ -179,3 +192,14 @@ if result_decrypt != bits_plaintext:
     print(f"S-DES FAILED...")
 else:
     print(f"S-DES SUCCESS!!!")
+    
+    
+'''
+01011111
+1101110111
+'''
+
+'''
+11101110
+0000100001
+'''
