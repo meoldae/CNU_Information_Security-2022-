@@ -52,7 +52,7 @@ schedule_keys: generate round keys for round function
 returns array of round keys.
 keep in mind that total rounds of S-DES is 2.
 '''
-def schedule_keys(key: bitarray) -> list[bitarray]:
+def schedule_keys(key: bitarray) -> list:
     round_keys = []
     permuted_key = bitarray()
 
@@ -117,8 +117,34 @@ mode determines that this function do encryption or decryption.
 MODE_ENCRYPT or MODE_DECRYPT available.
 '''
 def sdes(text: bitarray, key: bitarray, mode) -> bitarray:
-    result = bitarray()
+    permutedText = []
+        
+    # IP 대로 입력을 섞는다.
+    for idx in IP:
+        permutedText.append(text[idx])
     
+    # 입력을 left, right로 나눈다.    
+    permutedTextLeft = permutedText[:4]
+    permutedTextRight = permutedText[4:]
+    
+    if mode == 1:
+        # 입력받은 키를 통해 라운드 키를 생성한다.
+        key = schedule_keys(key)
+        # 라운드 키와 나눈 입력을 라운드 함수에 통과 시킨다. 
+        # 라운드 함수를 통과 하면서 확장된다.
+        permutedTextRight = round(permutedTextRight, key)
+        
+        permutedTextRightRow = [permutedTextRight[0], permutedTextRight[-1]]
+        permutedTextRightCol = [permutedTextRight[1], permutedTextRight[2]]
+        
+        
+        
+        return
+    
+    elif mode == 2:
+
+            
+        return
     # Place your own implementation of S-DES Here
     
     return result

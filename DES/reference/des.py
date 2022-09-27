@@ -212,6 +212,7 @@ def feistel(message: bitarray, key: bitarray) -> bitarray:
 ###############################################################
 
 def pc1_pass(key:bitarray) -> (bitarray, bitarray):
+# def pc1_pass(key:bitarray) -> list(bitarray, bitarray):
     result_bits = bitarray()
 
     for i in range(0, 56):
@@ -249,12 +250,12 @@ def r_key(key: bitarray, round: int) -> bitarray:
 #    BEGIN : Utility functions
 #
 ##############################################################
-
 def generate_blocks_str(message: str, key:str) -> (int, bitarray, bitarray):
+# def generate_blocks_str(message: str, key:str) -> list(map((int, bitarray, bitarray))):
     return generate_blocks(message.encode('utf-8'), key.encode('utf-8'))
 
-
 def generate_blocks(message: bytes, key: bytes) -> (int, bitarray, bitarray):
+# def generate_blocks(message: bytes, key: bytes) -> list(map((int, bitarray, bitarray))):
     block_count = math.ceil(len(message) / 8)
 
     message_bits = bitarray()
@@ -291,8 +292,8 @@ def append_bits(val:int, width:int, bitarr:bitarray):
 #    BEGIN: User executable functions
 #
 ###############################################################
-
 def encrypt_des(message: str, key: str, mode: int, iv=None) -> (bytes, bytes):
+# def encrypt_des(message: str, key: str, mode: int, iv=None) -> list(bytes, bytes):
     """
     :param message: plaintext
     :param key    : key
