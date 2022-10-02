@@ -16,12 +16,19 @@ class Receiver(Thread):
     def decrypt(self, ciphertext:bytes) -> bytes:
         # place your own implementation of
         # AES-128-ECB decryption with pycryptodome
-
-        return b''
-
+        aes = AES.new(ENCRYPTION_KEY, AES.MODE_ECB)
+        plain = aes.decrypt(ciphertext)
+        plainText = unpad(plain, BLOCK_SIZE)
+        return plainText
+                
     def handle_recv(self, received:bytes):
         try:
             decrypt_result = self.decrypt(received)
+            # Message 받을 때 개행 이상해짐.. 
+            # print()
+            # print("Received: " + bytes.decode(decrypt_result, "UTF-8"))
+            # print('Message: ', end="")
+            
             print("Received: " + bytes.decode(decrypt_result, "UTF-8"))
         except:
             pass
@@ -34,8 +41,11 @@ class Receiver(Thread):
 def encrypt_message(msg: bytes) -> bytes:
     # place your own implementation of
     # AES-128-ECB encryption with pycryptodome
+    paddedText = pad(msg, BLOCK_SIZE)
+    aes = AES.new(ENCRYPTION_KEY, AES.MODE_ECB)
+    cipherText = aes.encrypt(paddedText)
 
-    return b''
+    return cipherText
 
 client_socket = socket(AddressFamily.AF_INET, SocketKind.SOCK_STREAM)
 client_socket.connect(('127.0.0.1', 24000))
