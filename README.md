@@ -14,7 +14,7 @@
 ```commit``` : [f8a1030](https://github.com/meoldae/CNU_Information_Security-2022-/commit/f8a1030f9edb67eaa9139d81cf54795f84ddb50e)
 
 ### 2022. 09. 28 
-- Pycryptodome 라이브러리를 이용한 AES_ECB 모드 실습     [#링크 ](https://inma.tistory.com/145)
+- Pycryptodome 라이브러리를 이용한 AES_ECB 모드 실습     [#링크참조](https://inma.tistory.com/145)
 
 ```commit``` : [5794270](https://github.com/meoldae/CNU_Information_Security-2022-/commit/5794270d82b5d6a46aca5c849b557a812e1020b2)
 
