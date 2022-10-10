@@ -148,16 +148,44 @@ def sdes(text: bitarray, key: bitarray, mode) -> bitarray:
 
 
 def sdes_encrypt_ecb(text: bitarray, key: bitarray):
-    pass
+    result = bitarray()
+    # 8 bit 당 1 Block으로 잘라서 연산
+    for i in range(len(text)//8):
+        result.extend(sdes(text[i*8:(i+1)*8], key, MODE_ENCRYPT))
+            
+    return result
 
 def sdes_decrypt_ecb(ciphertext: bitarray, key: bitarray):
-    pass
+    result = bitarray()
+    # 8 bit 당 1 Block으로 잘라서 연산
+    for i in range(len(ciphertext)//8):
+        result.extend(sdes(ciphertext[i*8:(i+1)*8], key, MODE_DECRYPT))
+
+    return result
 
 def sdes_encrypt_cbc(text: bitarray, key: bitarray, iv:bitarray):
-    pass
+    result = bitarray()
+    # 8 bit 당 1 Block으로 잘라서 연산
+    for i in range(len(text)//8):
+        if i == 0:
+            # 첫 번째 Block은 Initial Vector와 XOR 연산
+            result.extend(sdes(text[i*8:(i+1)*8]^iv, key, MODE_ENCRYPT))
+        else:
+            result.extend(sdes(text[i*8:(i+1)*8]^result[(i-1)*8:i*8], key, MODE_ENCRYPT))
+    
+    return result
 
 def sdes_decrypt_cbc(ciphertext: bitarray, key: bitarray, iv:bitarray):
-    pass
+    result = bitarray()
+    
+    for i in range(len(ciphertext)//8):
+        if i == 0:
+            # 첫 번째 Block은 Initial Vector와 XOR 연산
+            result.extend(sdes(ciphertext[i*8:(i+1)*8], key, MODE_DECRYPT)^iv)
+        else:
+            result.extend(sdes(ciphertext[i*8:(i+1)*8], key, MODE_DECRYPT)^ciphertext[(i-1)*8:i*8])
+    
+    return result
 
 #### DES Sample Program Start
 
@@ -193,6 +221,11 @@ else:
     print(f"S-DES-ECB SUCCESS!!!")
 
 random_iv = bitarray(bin(random.getrandbits(8)).replace('0b', ''))
+
+# 고정 8bit 길이로 맞춰 줌 
+while len(random_iv) < 8:
+    random_iv.insert(0, 0)
+    
 print(f"IV will be random...{random_iv}")
 
 result_encrypt = sdes_encrypt_cbc(bits_plaintext, bits_key, random_iv)
