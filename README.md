@@ -19,3 +19,7 @@
 ```commit``` : [5794270](https://github.com/meoldae/CNU_Information_Security-2022-/commit/5794270d82b5d6a46aca5c849b557a812e1020b2)
 
 
+### 2022. 10. 05
+- S-DES-MOD (ECB, CBC) 구현
+
+```commit``` : [33ac810](https://github.com/meoldae/CNU_Information_Security-2022-/commit/33ac8106f7610a5c18ef0f21a0f46d38eba73ad3)
