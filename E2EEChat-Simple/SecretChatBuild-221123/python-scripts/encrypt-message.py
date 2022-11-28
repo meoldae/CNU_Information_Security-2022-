@@ -15,7 +15,7 @@ def read_from_base64():
 def pad_message(msg):
     # 메세지 패딩 구현
     padded_msg = msg.encode('utf-8') 
-    padded_msg = pad(padded_msg, 128)
+    padded_msg = pad(padded_msg, 16)
     
     return padded_msg
 

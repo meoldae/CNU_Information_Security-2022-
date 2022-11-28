@@ -16,9 +16,8 @@ def encrypt_secret(secret, pubkey):
     key = RSA.import_key(pubkey)
     pkcs = PKCS1_OAEP.new(key)
     encrypted_key = pkcs.encrypt(secret)
-    return encrypted_key
+    return encode_base64(encrypted_key)
     
 [secret, pubkey] = read_from_base64()
 cipher_str = encrypt_secret(secret, pubkey)
-
 print(cipher_str)

@@ -14,7 +14,7 @@ rsa = RSA.generate(2048)
 # 공개키 export
 pubkey = rsa.publickey().exportKey()
 # 개인키 export
-prikey = rsa.exportKey(pkcs=8)
+prikey = rsa.exportKey()
 
 print(encode_base64(secret) + '\n')
 
