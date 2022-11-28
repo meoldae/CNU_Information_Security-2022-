@@ -28,3 +28,9 @@
 - RSA 구현
 
 ```commit``` : [9adcf28](https://github.com/meoldae/CNU_Information_Security-2022-/commit/9adcf28840e0b252cf21a01a84a83d9e95a9dfb3)
+
+
+### 2022. 11. 23
+- 하이브리드 암호를 이용한 암호채팅 구현
+
+```commit``` : [70f9349](https://github.com/meoldae/CNU_Information_Security-2022-/commit/70f93490c92f9f3784742e43b9c517472eee7a6c), [27d1853](https://github.com/meoldae/CNU_Information_Security-2022-/commit/27d1853d2cda87625d1e60b62863144e16224bdf)
