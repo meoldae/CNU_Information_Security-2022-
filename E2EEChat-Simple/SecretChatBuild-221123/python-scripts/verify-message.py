@@ -23,9 +23,9 @@ def verify(msg, key, signature):
     rsakey = RSA.import_key(key)
     try:
         pkcs1_15.new(rsakey).verify(hash, signature)
-        print("ok")
+        return "ok"
     except Exception as e:
-        print("This signature is invalid")
+        return "This signature is invalid"
 
 [msg, pubkey, signature] = read_from_base64()
 
