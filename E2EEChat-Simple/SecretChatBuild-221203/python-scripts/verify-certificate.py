@@ -26,19 +26,18 @@ def verify(hash, key, signature):
 	rsakey = RSA.import_key(key)
 	try:
 		pkcs1_15.new(rsakey).verify(hash, signature)
-		return "ok"
+		return True
 	except Exception as e:
-		return "This signature is invalid"
+		return False
 
 cert = read_as_json()
 
 # 비교할 해시 생성
-hash_compare = make_cert_hash(cert['name'], cert['pubkey'])
+hash_compare = make_cert_hash(cert["name"], cert["pubKey"])
 # bytes:서버 공개키 (HINT: JSON에는 BASE64 형태로 제공되어 있음)
-server_pubkey = decode_base64(cert['pubkey'])
+server_pubkey = decode_base64(cert["serverPubKey"])
 # bytes:서버 서명 (HINT: JSON에는 BASE64 형태로 제공되어 있음)
-signature = decode_base64(cert['signature'])
-
+signature = decode_base64(cert["signature"].encode('utf-8'))
 # 인증서 내 서명 검증
 cert['isValid'] = verify(hash_compare, server_pubkey, signature)
 
