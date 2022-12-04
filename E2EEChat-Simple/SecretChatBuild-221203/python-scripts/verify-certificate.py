@@ -37,7 +37,7 @@ hash_compare = make_cert_hash(cert["name"], cert["pubKey"])
 # bytes:서버 공개키 (HINT: JSON에는 BASE64 형태로 제공되어 있음)
 server_pubkey = decode_base64(cert["serverPubKey"])
 # bytes:서버 서명 (HINT: JSON에는 BASE64 형태로 제공되어 있음)
-signature = decode_base64(cert["signature"].encode('utf-8'))
+signature = decode_base64(cert["signature"])
 # 인증서 내 서명 검증
 cert['isValid'] = verify(hash_compare, server_pubkey, signature)
 
